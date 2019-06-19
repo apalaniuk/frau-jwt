@@ -11,6 +11,8 @@ var CACHED_TOKENS = null,
 	IN_FLIGHT_REQUESTS = null,
 	CLOCK_SKEW = 0;
 
+let hostname = null;
+
 resetCaches();
 
 function clock() {
@@ -70,7 +72,7 @@ function adjustClockSkew(res) {
 function requestToken(scope) {
 	return new Promise(function(resolve, reject) {
 		request
-			.post(TOKEN_ROUTE)
+			.post(`${hostname}${TOKEN_ROUTE}`)
 			.type('form')
 			.send({
 				scope: scope
@@ -131,6 +133,10 @@ global.addEventListener && global.addEventListener('storage', function sessionLi
 			break;
 	}
 });
+
+module.exports.updateconfig = function(opts) {
+	hostname = opts.hostname;
+};
 
 module.exports._clock = clock;
 module.exports._resetCaches = resetCaches;
